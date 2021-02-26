@@ -45,11 +45,10 @@ void q_free(queue_t *q)
  */
 bool q_insert_head(queue_t *q, char *s)
 {
-    list_ele_t *newh;
     /* TODO: What should you do if the q is NULL? */
     if (q == NULL)
         return false;
-    newh = malloc(sizeof(list_ele_t));
+    list_ele_t *newh = malloc(sizeof(list_ele_t));
     if (!newh)
         return false;
     newh->value = malloc(strlen(s) + 1);
@@ -73,10 +72,9 @@ bool q_insert_head(queue_t *q, char *s)
  */
 bool q_insert_tail(queue_t *q, char *s)
 {
-    list_ele_t *newt;
     if (q == NULL)
         return false;
-    newt = malloc(sizeof(list_ele_t));
+    list_ele_t *newt = malloc(sizeof(list_ele_t));
     if (newt == NULL)
         return false;
     newt->value = malloc(strlen(s) + 1);
@@ -103,9 +101,9 @@ bool q_insert_tail(queue_t *q, char *s)
  */
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
-    list_ele_t *tmp = q->head;
     if (q->head == NULL)
         return false;
+    list_ele_t *tmp = q->head;
     strncpy(sp, q->head->value, bufsize);
     q->head = q->head->next;
     q->size--;
@@ -135,18 +133,16 @@ void q_reverse(queue_t *q)
     if (q != NULL) {
         list_ele_t *tmp;
         list_ele_t *next_list;
-        tmp = q->tail;
-        while (q->head != tmp) {
-            next_list = q->head;
-            while (next_list->next->next == NULL)
-                next_list = next_list->next;
-            tmp->next = next_list;
+        q->tail = q->head;
+        tmp = q->head->next;
+        next_list = tmp->next;
+        q->head->next = NULL;
+        while (tmp != NULL) {
+            tmp->next = q->head;
+            q->head = tmp;
             tmp = next_list;
-            tmp->next = NULL;
+            next_list = (next_list == NULL) ? NULL : next_list->next;
         }
-        tmp->next = NULL;
-        q->head = q->tail;
-        q->tail = tmp;
     }
 }
 
